@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEP Mental Health Assistant | Keystone School of Engineering</title>
+    
+    <!-- PWA & Mobile Web App Meta Tags -->
+    <meta name="theme-color" content="#315E48">
+    <meta name="description" content="CEP Mental Health Assistant - Your mind matters. Your feelings matter. A project by Keystone School of Engineering.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CEP Mind Assistant">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22CEP%20Mental%20Health%20Assistant%22,%22short_name%22:%22CEP%20Mind%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22#F7F6F0%22,%22theme_color%22:%22#315E48%22}">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#F7F6F0',
+                        sage: '#83A88E',
+                        'sage-light': '#DDE9DE',
+                        forest: '#315E48',
+                        peach: '#E8D9CF',
+                        'forest-dark': '#1F3F30',
+                    },
+                    fontFamily: {
+                        heading: ['Poppins', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F7F6F0;
+            color: #1F3F30;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Smooth Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F7F6F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #83A88E;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #315E48;
+        }
+
+        /* Breathing Circle Pulse Animation */
+        @keyframes breatheIn {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.45); }
+            100% { transform: scale(1); }
+        }
+        .animate-breathe {
+            animation: breatheIn 8s ease-in-out infinite;
+        }
+        .animate-breathe-paused {
+            animation-play-state: paused;
+        }
+
+        /* Toast slide animation */
+        @keyframes slideInUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-slide {
+            animation: slideInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Chat bubble typing indicator pulse */
+        @keyframes dotPulse {
+            0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+            40% { opacity: 1; transform: scale(1.1); }
+        }
+        .typing-dot {
+            animation: dotPulse 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-sage selection:text-white">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-cream/90 backdrop-blur-md border-b border-sage/20 transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-11 h-11 rounded-2xl bg-forest text-cream flex items-center justify-center shadow-md shadow-forest/10 hover:scale-105 transition-transform">
+                        <i data-lucide="heart-handshake" class="w-6 h-6 text-peach"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-xl tracking-tight text-forest font-heading">CEP</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-sage-light text-forest font-semibold tracking-wide">COLLEGE PROJECT</span>
+                        </div>
+                        <p class="text-xs text-forest/70 font-medium">Mind Assistant</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center space-x-1">
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">Home</button>
+                    <button onclick="navigateTo('chatbot')" id="nav-chatbot" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5">
+                        <i data-lucide="bot" class="w-4 h-4"></i> Mind Assistant
+                    </button>
+                    <button onclick="navigateTo('community')" id="nav-community" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5">
+                        <i data-lucide="users" class="w-4 h-4"></i> Community
+                    </button>
+                    <button onclick="navigateTo('mood')" id="nav-mood" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">Mood Tracker</button>
+                    <button onclick="navigateTo('breathing')" id="nav-breathing" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">Breathing</button>
+                    <button onclick="navigateTo('selfcare')" id="nav-selfcare" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">Self-Care</button>
+                    <button onclick="navigateTo('doctor')" id="nav-doctor" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">Consultation</button>
+                    <button onclick="navigateTo('about')" id="nav-about" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all">About</button>
+                </nav>
+
+                <!-- Action Button & Mobile Menu Toggle -->
+                <div class="flex items-center gap-3">
+                    <button onclick="openHelpModal()" class="px-4 py-2.5 rounded-xl bg-peach text-forest-dark font-semibold text-xs sm:text-sm hover:bg-peach/80 transition-all flex items-center gap-2 shadow-sm border border-peach/50">
+                        <i data-lucide="life-buoy" class="w-4 h-4 text-rose-600 animate-pulse"></i>
+                        <span>Help Now</span>
+                    </button>
+
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-xl bg-sage-light/50 text-forest hover:bg-sage-light transition-all" aria-label="Toggle Navigation">
+                        <i data-lucide="menu" id="menu-icon-open" class="w-6 h-6"></i>
+                        <i data-lucide="x" id="menu-icon-close" class="w-6 h-6 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-cream border-b border-sage/20 px-4 pt-2 pb-6 space-y-2">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-medium text-forest hover:bg-sage-light/50 flex items-center gap-3">
+                <i data-lucide="home" class="w-5 h-5"></i> Home
+            </button>
+            <button onclick="navigateTo('chatbot'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-medium text-forest hover:bg-sage-light/50 flex items-center gap-3">
+                <i data-lucide="bot" class="w-5 h-5"></i> Mind Assistant (Chatbot)
+            </button>
+            <button onclick="navigateTo('community'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-medium text-forest hover:bg-sage-light/50 flex items-center gap-3">
+                <i data-lucide="users" class="w-5 h-5"></i> Anonymous Community Wall
+            </button>
+            <button onclick="navigateTo('mood'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-medium text-forest hover:bg-sage-light/50 flex items-center gap-3">
+                <i data-lucide="smile" class="w-5 h-5"></i> Daily Mood Tracker
+            </button>
+            <button onclick="navigateTo('breathing'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-medium text-forest hover:bg-sage-light/50 flex items-center gap-3">
+                <i data-lucide="wind" class="w-5 h-5"></i> Breathing Exercise
+            </button>
+            <button onclick="navigateTo('selfcare'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-medium text-forest hover:bg-sage-light/50 flex items-center gap-3">
+                <i data-lucide="book-open" class="w-5 h-5"></i> Self-Care Library
+            </button>
+            <button onclick="navigateTo('doctor'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-medium text-forest hover:bg-sage-light/50 flex items-center gap-3">
+                <i data-lucide="stethoscope" class="w-5 h-5"></i> Doctor Consult (Coming Soon)
+            </button>
+            <button onclick="navigateTo('about'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-xl font-medium text-forest hover:bg-sage-light/50 flex items-center gap-3">
+                <i data-lucide="info" class="w-5 h-5"></i> About Project & Team
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN SPA CONTENT WRAPPER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 1. HOME VIEW -->
+        <section id="view-home" class="spa-view space-y-16">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl bg-gradient-to-br from-sage-light via-cream to-peach/40 p-8 sm:p-12 lg:p-16 border border-sage/20 overflow-hidden shadow-sm">
+                <div class="max-w-3xl relative z-10 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest/10 text-forest text-xs font-semibold uppercase tracking-wider">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-forest"></i>
+                        A judgment-free space for your wellbeing
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-forest tracking-tight leading-tight">
+                        Your mind matters. <br><span class="text-sage">Your feelings matter.</span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-forest/80 font-normal leading-relaxed max-w-2xl">
+                        A little support can make a big difference. Explore structured self-help guidance, share anonymously with peers, track your mood, and cultivate daily wellness.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="navigateTo('chatbot')" class="px-7 py-4 rounded-2xl bg-forest text-cream font-bold text-base hover:bg-forest-dark transition-all shadow-lg shadow-forest/20 flex items-center gap-3 hover:translate-y-[-2px]">
+                            <i data-lucide="bot" class="w-5 h-5 text-peach"></i>
+                            Start Your Journey
+                        </button>
+                        <button onclick="navigateTo('community')" class="px-7 py-4 rounded-2xl bg-white/80 text-forest font-bold text-base hover:bg-white transition-all border border-sage/30 shadow-sm flex items-center gap-3 hover:translate-y-[-2px]">
+                            <i data-lucide="message-square" class="w-5 h-5 text-sage"></i>
+                            Explore Community
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Decorative Illustration Vector Overlay -->
+                <div class="hidden lg:block absolute right-10 bottom-6 w-96 h-96 opacity-80 pointer-events-none">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                        <path fill="#83A88E" fill-opacity="0.25" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.6,-45.8C87.4,-32.5,90,-16.3,88.5,-0.9C87,14.6,81.4,29.1,72.8,41.2C64.2,53.2,52.6,62.8,39.5,70.1C26.4,77.4,13.2,82.4,-0.6,83.4C-14.4,84.4,-28.8,81.4,-41.8,74.2C-54.8,67,-66.4,55.6,-74.3,42C-82.2,28.4,-86.4,12.6,-85.7,-3C-85,-18.6,-79.4,-34,-70.5,-46.8C-61.6,-59.6,-49.4,-69.8,-35.8,-77.3C-22.2,-84.8,-7.2,-89.6,6.6,-99.8C20.4,-110,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
+                        <circle cx="100" cy="100" r="45" fill="#315E48" opacity="0.1" />
+                        <path d="M70,110 Q100,60 130,110 Q100,160 70,110 Z" fill="#83A88E" opacity="0.4"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Daily Affirmation Interactive Card -->
+            <div class="rounded-2xl bg-white p-6 sm:p-8 border border-sage/20 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-start gap-4">
+                    <div class="p-3.5 rounded-2xl bg-peach/40 text-forest shrink-0">
+                        <i data-lucide="sun" class="w-7 h-7 text-amber-600"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-sage">Daily Affirmation</span>
+                        <p id="affirmation-text" class="text-lg font-medium text-forest mt-1 italic">
+                            "I am allowed to take things one step at a time. My value is not measured by my productivity."
+                        </p>
+                    </div>
+                </div>
+                <button onclick="refreshAffirmation()" class="px-5 py-2.5 rounded-xl bg-sage-light text-forest text-sm font-semibold hover:bg-sage hover:text-white transition-all shrink-0 flex items-center gap-2">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i> New Affirmation
+                </button>
+            </div>
+
+            <!-- Interactive Feature Cards Grid -->
+            <div class="space-y-6">
+                <div class="text-center max-w-2xl mx-auto">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-forest">Explore Wellness Tools</h2>
+                    <p class="text-forest/70 mt-2 text-sm sm:text-base">Designed specifically to support students and youth through self-reflection and community support.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Card 1: Chatbot -->
+                    <div onclick="navigateTo('chatbot')" class="group p-6 rounded-2xl bg-white border border-sage/20 shadow-sm hover:shadow-md hover:border-sage transition-all cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-forest group-hover:scale-110 transition-transform mb-4">
+                                <i data-lucide="bot" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-forest group-hover:text-sage transition-colors">Mind Assistant Chatbot</h3>
+                            <p class="text-sm text-forest/70 mt-2">Interactive rule-based conversation loops to help navigate stress, exam anxiety, sleep, and relationships.</p>
+                        </div>
+                        <div class="mt-6 flex items-center gap-2 text-xs font-bold text-forest group-hover:translate-x-1 transition-transform">
+                            <span>Open Assistant</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Community -->
+                    <div onclick="navigateTo('community')" class="group p-6 rounded-2xl bg-white border border-sage/20 shadow-sm hover:shadow-md hover:border-sage transition-all cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-peach/40 flex items-center justify-center text-forest group-hover:scale-110 transition-transform mb-4">
+                                <i data-lucide="users" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-forest group-hover:text-sage transition-colors">Anonymous Community Wall</h3>
+                            <p class="text-sm text-forest/70 mt-2">Share your thoughts safely using auto-generated aliases like QuietCloud42. Support peers with likes & comments.</p>
+                        </div>
+                        <div class="mt-6 flex items-center gap-2 text-xs font-bold text-forest group-hover:translate-x-1 transition-transform">
+                            <span>Join Discussion</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Mood Tracker -->
+                    <div onclick="navigateTo('mood')" class="group p-6 rounded-2xl bg-white border border-sage/20 shadow-sm hover:shadow-md hover:border-sage transition-all cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-forest group-hover:scale-110 transition-transform mb-4">
+                                <i data-lucide="smile" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-forest group-hover:text-sage transition-colors">Daily Mood Tracker</h3>
+                            <p class="text-sm text-forest/70 mt-2">Record how you feel daily, add personal notes, and visualize your weekly mood trajectory over time.</p>
+                        </div>
+                        <div class="mt-6 flex items-center gap-2 text-xs font-bold text-forest group-hover:translate-x-1 transition-transform">
+                            <span>Track Mood</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Breathing -->
+                    <div onclick="navigateTo('breathing')" class="group p-6 rounded-2xl bg-white border border-sage/20 shadow-sm hover:shadow-md hover:border-sage transition-all cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-peach/40 flex items-center justify-center text-forest group-hover:scale-110 transition-transform mb-4">
+                                <i data-lucide="wind" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-forest group-hover:text-sage transition-colors">Breathing Exercise</h3>
+                            <p class="text-sm text-forest/70 mt-2">Guided 60-second breathing timer with expanding visual cues to reduce immediate anxiety and tension.</p>
+                        </div>
+                        <div class="mt-6 flex items-center gap-2 text-xs font-bold text-forest group-hover:translate-x-1 transition-transform">
+                            <span>Start Breathing</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Self Care -->
+                    <div onclick="navigateTo('selfcare')" class="group p-6 rounded-2xl bg-white border border-sage/20 shadow-sm hover:shadow-md hover:border-sage transition-all cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-forest group-hover:scale-110 transition-transform mb-4">
+                                <i data-lucide="book-open" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-forest group-hover:text-sage transition-colors">Self-Care Activity Library</h3>
+                            <p class="text-sm text-forest/70 mt-2">Bite-sized micro-activities for study breaks, sleep prep, gratitude journaling, and mindfulness.</p>
+                        </div>
+                        <div class="mt-6 flex items-center gap-2 text-xs font-bold text-forest group-hover:translate-x-1 transition-transform">
+                            <span>Browse Activities</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: Doctor Consultation -->
+                    <div onclick="navigateTo('doctor')" class="group p-6 rounded-2xl bg-white border border-sage/20 shadow-sm hover:shadow-md hover:border-sage transition-all cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-peach/40 flex items-center justify-center text-forest group-hover:scale-110 transition-transform mb-4">
+                                <i data-lucide="stethoscope" class="w-6 h-6"></i>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-lg font-bold text-forest group-hover:text-sage transition-colors">Doctor Consult</h3>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 uppercase">Coming Soon</span>
+                            </div>
+                            <p class="text-sm text-forest/70 mt-2">Future feature preview for online telehealth appointments with certified counseling psychologists.</p>
+                        </div>
+                        <div class="mt-6 flex items-center gap-2 text-xs font-bold text-forest group-hover:translate-x-1 transition-transform">
+                            <span>View Preview</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works Section -->
+            <div class="rounded-3xl bg-forest text-cream p-8 sm:p-12 space-y-8">
+                <div class="text-center max-w-xl mx-auto space-y-2">
+                    <span class="text-xs font-bold uppercase tracking-widest text-sage-light">Simple & Accessible</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold">How CEP Mind Assistant Works</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center space-y-3 p-4">
+                        <div class="w-12 h-12 rounded-full bg-sage text-forest font-bold text-lg flex items-center justify-center mx-auto">1</div>
+                        <h3 class="font-bold text-lg">Select How You Feel</h3>
+                        <p class="text-sm text-cream/80">Choose structured topics in the Mind Assistant or log your mood state in the daily tracker.</p>
+                    </div>
+                    <div class="text-center space-y-3 p-4">
+                        <div class="w-12 h-12 rounded-full bg-sage text-forest font-bold text-lg flex items-center justify-center mx-auto">2</div>
+                        <h3 class="font-bold text-lg">Follow Guided Steps</h3>
+                        <p class="text-sm text-cream/80">Get immediate evidence-based grounding exercises, task breakdowns, or calming routines.</p>
+                    </div>
+                    <div class="text-center space-y-3 p-4">
+                        <div class="w-12 h-12 rounded-full bg-sage text-forest font-bold text-lg flex items-center justify-center mx-auto">3</div>
+                        <h3 class="font-bold text-lg">Connect & Reflect</h3>
+                        <p class="text-sm text-cream/80">Share thoughts anonymously with your college community and track your emotional progress.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Educational Disclaimer Banner -->
+            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 flex items-start gap-3 text-xs text-amber-900">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+                <div>
+                    <span class="font-bold">Important Educational Project Notice:</span> CEP Mental Health Assistant is a college project developed at Keystone School of Engineering. It is not a clinical medical device, emergency service, or substitute for professional psychiatric diagnosis or therapy. If you are experiencing an immediate crisis, please click "Help Now" above to contact emergency helplines.
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. GUIDED CHATBOT VIEW (MAIN FEATURE) -->
+        <section id="view-chatbot" class="spa-view hidden">
+            <div class="max-w-4xl mx-auto bg-white rounded-3xl border border-sage/20 shadow-lg overflow-hidden flex flex-col h-[780px]">
+                
+                <!-- Chat Header -->
+                <div class="bg-forest text-cream p-4 sm:p-5 flex items-center justify-between border-b border-forest-dark">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <div class="w-11 h-11 rounded-2xl bg-sage-light text-forest flex items-center justify-center font-bold">
+                                <i data-lucide="bot" class="w-6 h-6"></i>
+                            </div>
+                            <span class="w-3 h-3 bg-emerald-400 border-2 border-forest rounded-full absolute bottom-0 right-0"></span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="font-bold text-base sm:text-lg">CEP Mind Assistant</h2>
+                                <span id="chat-step-badge" class="px-2 py-0.5 rounded-full bg-sage/30 text-sage-light text-[10px] font-semibold tracking-wide">Step 1 of 3</span>
+                            </div>
+                            <p class="text-xs text-cream/70">Rule-Based Guided Support • Judgment Free</p>
+                        </div>
+                    </div>
+
+                    <!-- Chat Controls -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="restartChat()" title="Restart Chat" class="p-2 rounded-xl bg-forest-dark/50 hover:bg-forest-dark text-cream/90 transition-all text-xs flex items-center gap-1.5 px-3">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> <span class="hidden sm:inline">Restart</span>
+                        </button>
+                        <button onclick="openHelpModal()" class="p-2 rounded-xl bg-peach/20 hover:bg-peach/30 text-peach transition-all text-xs flex items-center gap-1 px-3 font-semibold">
+                            <i data-lucide="shield-alert" class="w-4 h-4 text-rose-300"></i> <span class="hidden sm:inline">Crisis Support</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Scrollable Message Body -->
+                <div id="chat-messages" class="flex-grow p-4 sm:p-6 overflow-y-auto space-y-4 bg-cream/30">
+                    <!-- Chat bubbles rendered dynamically via JS -->
+                </div>
+
+                <!-- Chat Interactive Option Buttons Container -->
+                <div class="p-4 sm:p-5 bg-white border-t border-sage/20 space-y-3">
+                    <div class="flex items-center justify-between text-xs text-forest/60 font-medium px-1">
+                        <span id="chat-hint">Select an option below to continue:</span>
+                        <button id="chat-back-btn" onclick="popChatHistory()" class="hidden text-sage hover:text-forest underline flex items-center gap-1">
+                            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to previous step
+                        </button>
+                    </div>
+                    
+                    <div id="chat-options-container" class="flex flex-wrap gap-2.5">
+                        <!-- Clickable dynamic option chips rendered here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. ANONYMOUS COMMUNITY WALL VIEW -->
+        <section id="view-community" class="spa-view hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-sage/20 shadow-sm">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-forest">Anonymous Community Wall</h2>
+                        <span class="px-2.5 py-1 rounded-full bg-peach/50 text-forest text-xs font-bold">Safe Space</span>
+                    </div>
+                    <p class="text-sm text-forest/70 mt-1">Share what's on your mind. Support peers with kindness. Auto-generated anonymous aliases protection.</p>
+                </div>
+                <button onclick="openGuidelinesModal()" class="px-4 py-2.5 rounded-xl bg-sage-light text-forest text-xs font-bold hover:bg-sage hover:text-white transition-all flex items-center gap-2 self-start md:self-auto">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> Community Guidelines
+                </button>
+            </div>
+
+            <!-- Post Composer -->
+            <div class="bg-white rounded-3xl p-6 border border-sage/20 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-sage/10 pb-3">
+                    <div class="flex items-center gap-2 text-xs font-bold text-forest/80">
+                        <i data-lucide="user-check" class="w-4 h-4 text-sage"></i>
+                        <span>Posting as Anonymous Alias:</span>
+                        <span id="active-user-alias" class="px-2 py-0.5 rounded-full bg-sage-light text-forest font-mono text-xs">Generating...</span>
+                        <button onclick="regenerateAlias()" title="Change Alias" class="text-sage hover:text-forest"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                    <span class="text-xs text-forest/50">100% Client-Side Demo</span>
+                </div>
+
+                <textarea id="post-input" rows="3" maxlength="280" placeholder="What's on your mind? Share exam stress, small wins, or ask for encouragement..." class="w-full p-4 rounded-2xl bg-cream/50 border border-sage/30 focus:outline-none focus:border-sage focus:ring-2 focus:ring-sage/20 text-sm resize-none text-forest placeholder:text-forest/40"></textarea>
+
+                <div class="flex items-center justify-between">
+                    <span id="char-counter" class="text-xs text-forest/50 font-medium">0 / 280 characters</span>
+                    <button onclick="submitNewPost()" class="px-6 py-2.5 rounded-xl bg-forest text-cream font-bold text-sm hover:bg-forest-dark transition-all flex items-center gap-2 shadow-md">
+                        <i data-lucide="send" class="w-4 h-4"></i> Post Anonymously
+                    </button>
+                </div>
+            </div>
+
+            <!-- Feed Filter Controls -->
+            <div class="flex items-center justify-between border-b border-sage/20 pb-3 px-1">
+                <div class="flex gap-2">
+                    <button onclick="filterPosts('all')" id="filter-all" class="post-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-forest text-cream">All Posts</button>
+                    <button onclick="filterPosts('recent')" id="filter-recent" class="post-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-forest border border-sage/30 hover:bg-sage-light">Recent</button>
+                    <button onclick="filterPosts('liked')" id="filter-liked" class="post-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-forest border border-sage/30 hover:bg-sage-light">Most Liked</button>
+                </div>
+                <span id="total-post-count" class="text-xs text-forest/60 font-semibold">5 Posts</span>
+            </div>
+
+            <!-- Dynamic Posts Timeline -->
+            <div id="posts-container" class="space-y-4">
+                <!-- Posts inserted dynamically -->
+            </div>
+        </section>
+
+        <!-- 4. DAILY MOOD TRACKER VIEW -->
+        <section id="view-mood" class="spa-view hidden space-y-8">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-sage/20 shadow-sm space-y-6">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-forest">Daily Mood Tracker</h2>
+                    <p class="text-sm text-forest/70 mt-1">Check in with yourself daily. Building emotional awareness helps identify patterns over time.</p>
+                </div>
+
+                <!-- Mood Selectable Cards Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
+                    <button onclick="selectMood('Great', '😊', 'bg-emerald-100 border-emerald-400')" class="mood-option-btn p-4 rounded-2xl border-2 border-sage/20 bg-cream hover:bg-sage-light/50 transition-all flex flex-col items-center gap-2 group">
+                        <span class="text-4xl group-hover:scale-110 transition-transform">😊</span>
+                        <span class="text-xs font-bold text-forest">Great</span>
+                    </button>
+                    <button onclick="selectMood('Good', '🙂', 'bg-teal-100 border-teal-400')" class="mood-option-btn p-4 rounded-2xl border-2 border-sage/20 bg-cream hover:bg-sage-light/50 transition-all flex flex-col items-center gap-2 group">
+                        <span class="text-4xl group-hover:scale-110 transition-transform">🙂</span>
+                        <span class="text-xs font-bold text-forest">Good</span>
+                    </button>
+                    <button onclick="selectMood('Okay', '😐', 'bg-amber-100 border-amber-400')" class="mood-option-btn p-4 rounded-2xl border-2 border-sage/20 bg-cream hover:bg-sage-light/50 transition-all flex flex-col items-center gap-2 group">
+                        <span class="text-4xl group-hover:scale-110 transition-transform">😐</span>
+                        <span class="text-xs font-bold text-forest">Okay</span>
+                    </button>
+                    <button onclick="selectMood('Low', '😔', 'bg-orange-100 border-orange-400')" class="mood-option-btn p-4 rounded-2xl border-2 border-sage/20 bg-cream hover:bg-sage-light/50 transition-all flex flex-col items-center gap-2 group">
+                        <span class="text-4xl group-hover:scale-110 transition-transform">😔</span>
+                        <span class="text-xs font-bold text-forest">Low</span>
+                    </button>
+                    <button onclick="selectMood('Overwhelmed', '😫', 'bg-rose-100 border-rose-400')" class="mood-option-btn col-span-2 sm:col-span-1 p-4 rounded-2xl border-2 border-sage/20 bg-cream hover:bg-sage-light/50 transition-all flex flex-col items-center gap-2 group">
+                        <span class="text-4xl group-hover:scale-110 transition-transform">😫</span>
+                        <span class="text-xs font-bold text-forest">Overwhelmed</span>
+                    </button>
+                </div>
+
+                <!-- Optional Note Form Input -->
+                <div id="mood-note-container" class="hidden space-y-3 pt-4 border-t border-sage/10">
+                    <div class="flex items-center justify-between">
+                        <span id="selected-mood-label" class="text-xs font-bold text-forest">Selected Mood: Good</span>
+                        <span class="text-xs text-forest/50">Optional note</span>
+                    </div>
+                    <input type="text" id="mood-note-input" placeholder="What contributed to this mood today? (e.g. Cleared my assignment deadline)" class="w-full p-3 rounded-xl bg-cream/60 border border-sage/30 text-sm text-forest focus:outline-none focus:border-sage">
+                    <button onclick="saveMoodEntry()" class="px-6 py-2.5 rounded-xl bg-forest text-cream font-bold text-xs hover:bg-forest-dark transition-all">
+                        Save Mood Entry
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mood History Timeline & Visualization -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-sage/20 shadow-sm space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-forest">Your Mood History</h3>
+                        <p class="text-xs text-forest/60">Saved locally in your browser</p>
+                    </div>
+                    <button onclick="clearMoodHistory()" class="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 text-xs font-semibold hover:bg-rose-100 transition-all">
+                        Clear History
+                    </button>
+                </div>
+
+                <!-- Visual Chart Summary Bars -->
+                <div id="mood-chart-container" class="p-4 bg-cream/40 rounded-2xl border border-sage/10 flex items-end justify-between h-44 gap-2">
+                    <!-- Dynamic chart bars generated via JS -->
+                </div>
+
+                <!-- List of Previous Logs -->
+                <div id="mood-logs-list" class="space-y-3">
+                    <!-- Dynamic log items -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. BREATHING EXERCISE VIEW -->
+        <section id="view-breathing" class="spa-view hidden">
+            <div class="max-w-2xl mx-auto bg-white p-8 sm:p-12 rounded-3xl border border-sage/20 shadow-lg text-center space-y-8">
+                <div>
+                    <span class="px-3 py-1 rounded-full bg-peach/40 text-forest text-xs font-bold uppercase tracking-wider">Relaxation Technique</span>
+                    <h2 class="text-3xl font-bold text-forest mt-3">Box Breathing Exercise</h2>
+                    <p class="text-sm text-forest/70 mt-1">Focus on the circle. Follow the breathing prompts to restore calm and drop heart rate.</p>
+                </div>
+
+                <!-- Animated Interactive Pulse Circle -->
+                <div class="relative w-64 h-64 mx-auto flex items-center justify-center my-8">
+                    <div id="breathing-circle" class="absolute inset-0 rounded-full bg-gradient-to-br from-sage to-forest opacity-80 shadow-2xl transition-all duration-1000 scale-100"></div>
+                    <div class="relative z-10 space-y-2 text-cream">
+                        <span id="breathing-phase" class="text-2xl font-bold tracking-wide uppercase">Get Ready</span>
+                        <div id="breathing-timer" class="text-4xl font-extrabold font-mono">60s</div>
+                    </div>
+                </div>
+
+                <!-- Timer Controls -->
+                <div class="flex justify-center gap-4">
+                    <button id="breath-start-btn" onclick="toggleBreathingTimer()" class="px-8 py-3.5 rounded-2xl bg-forest text-cream font-bold text-sm hover:bg-forest-dark transition-all flex items-center gap-2 shadow-md">
+                        <i data-lucide="play" class="w-4 h-4"></i> Start Session
+                    </button>
+                    <button onclick="resetBreathingTimer()" class="px-6 py-3.5 rounded-2xl bg-sage-light text-forest font-bold text-sm hover:bg-sage hover:text-white transition-all flex items-center gap-2">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset
+                    </button>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-cream border border-sage/20 text-xs text-forest/70 max-w-md mx-auto">
+                    <strong>Rhythm Pattern:</strong> 4s Breathe In • 4s Hold • 4s Breathe Out • 4s Rest
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. SELF-CARE LIBRARY VIEW -->
+        <section id="view-selfcare" class="spa-view hidden space-y-8">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-sage/20 shadow-sm space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-forest">Self-Care Activity Library</h2>
+                        <p class="text-sm text-forest/70 mt-1">Small, actionable micro-habits to restore emotional energy throughout the day.</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-sage-light/50 px-4 py-2 rounded-2xl border border-sage/20">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-forest"></i>
+                        <span id="selfcare-completed-counter" class="text-xs font-bold text-forest">0 Activities Completed Today</span>
+                    </div>
+                </div>
+
+                <!-- Search & Filters -->
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-grow">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-forest/40"></i>
+                        <input type="text" id="selfcare-search" oninput="renderSelfCareCards()" placeholder="Search activities (e.g. journaling, sleep, breaks)..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-cream/50 border border-sage/30 text-sm text-forest focus:outline-none focus:border-sage">
+                    </div>
+                    <div class="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+                        <button onclick="filterSelfCare('all')" class="selfcare-cat-btn px-3 py-2 rounded-xl text-xs font-bold bg-forest text-cream whitespace-nowrap">All</button>
+                        <button onclick="filterSelfCare('relaxation')" class="selfcare-cat-btn px-3 py-2 rounded-xl text-xs font-bold bg-cream text-forest border border-sage/30 hover:bg-sage-light whitespace-nowrap">Relaxation</button>
+                        <button onclick="filterSelfCare('study')" class="selfcare-cat-btn px-3 py-2 rounded-xl text-xs font-bold bg-cream text-forest border border-sage/30 hover:bg-sage-light whitespace-nowrap">Study Breaks</button>
+                        <button onclick="filterSelfCare('journaling')" class="selfcare-cat-btn px-3 py-2 rounded-xl text-xs font-bold bg-cream text-forest border border-sage/30 hover:bg-sage-light whitespace-nowrap">Journaling</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Activity Grid -->
+            <div id="selfcare-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic self-care cards -->
+            </div>
+        </section>
+
+        <!-- 7. DOCTOR CONSULTATION VIEW (COMING SOON PREVIEW) -->
+        <section id="view-doctor" class="spa-view hidden space-y-8">
+            <div class="bg-gradient-to-br from-forest via-forest-dark to-forest text-cream p-8 sm:p-12 rounded-3xl shadow-lg relative overflow-hidden">
+                <div class="max-w-2xl relative z-10 space-y-4">
+                    <span class="px-3 py-1 rounded-full bg-peach text-forest-dark text-xs font-bold uppercase tracking-wider">Upcoming Feature Preview</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold">Online Professional Consultations</h2>
+                    <p class="text-cream/80 text-sm sm:text-base leading-relaxed">
+                        We are currently preparing integration with verified counselors and clinical psychologists for confidential telehealth sessions.
+                    </p>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold">
+                        <i data-lucide="clock" class="w-4 h-4 text-peach"></i> Target Rollout: CEP Version 2.0
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctor Directory Teaser Cards -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold text-forest">Planned Specialist Network</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Doctor Card 1 -->
+                    <div class="bg-white p-6 rounded-3xl border border-sage/20 shadow-sm flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-sage-light text-forest flex items-center justify-center font-bold text-xl">
+                                    AS
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-forest">Dr. Ananya Sharma</h4>
+                                    <p class="text-xs text-forest/60">M.Phil Clinical Psychology</p>
+                                    <span class="inline-block mt-1 text-[10px] px-2 py-0.5 rounded bg-sage-light text-forest font-semibold">Student Stress & Anxiety</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-forest/70">Specializes in academic burnout, cognitive behavioral coping strategies, and mindfulness coaching.</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-sage/10 flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Coming Soon</span>
+                            <button onclick="openDoctorModal('Dr. Ananya Sharma')" class="px-4 py-2 rounded-xl bg-sage-light text-forest text-xs font-bold hover:bg-sage hover:text-white transition-all">
+                                Book Consult
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Card 2 -->
+                    <div class="bg-white p-6 rounded-3xl border border-sage/20 shadow-sm flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-peach/50 text-forest flex items-center justify-center font-bold text-xl">
+                                    RV
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-forest">Dr. Rajesh Verma</h4>
+                                    <p class="text-xs text-forest/60">Counseling Psychologist</p>
+                                    <span class="inline-block mt-1 text-[10px] px-2 py-0.5 rounded bg-sage-light text-forest font-semibold">Relationships & Youth</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-forest/70">Focuses on interpersonal communication, depression management, and young adult life transitions.</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-sage/10 flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Coming Soon</span>
+                            <button onclick="openDoctorModal('Dr. Rajesh Verma')" class="px-4 py-2 rounded-xl bg-sage-light text-forest text-xs font-bold hover:bg-sage hover:text-white transition-all">
+                                Book Consult
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Card 3 -->
+                    <div class="bg-white p-6 rounded-3xl border border-sage/20 shadow-sm flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-sage-light text-forest flex items-center justify-center font-bold text-xl">
+                                    PM
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-forest">Dr. Priya Mehta</h4>
+                                    <p class="text-xs text-forest/60">Psychotherapist & Sleep Specialist</p>
+                                    <span class="inline-block mt-1 text-[10px] px-2 py-0.5 rounded bg-sage-light text-forest font-semibold">Sleep & Insomnia</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-forest/70">Expertise in sleep hygiene, panic prevention, and stress reduction therapy for university students.</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-sage/10 flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">Coming Soon</span>
+                            <button onclick="openDoctorModal('Dr. Priya Mehta')" class="px-4 py-2 rounded-xl bg-sage-light text-forest text-xs font-bold hover:bg-sage hover:text-white transition-all">
+                                Book Consult
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Notify Me Form Demo -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-sage/20 shadow-sm max-w-xl mx-auto text-center space-y-4">
+                <i data-lucide="bell" class="w-8 h-8 text-sage mx-auto"></i>
+                <h3 class="text-lg font-bold text-forest">Get Notified When Telehealth Launches</h3>
+                <p class="text-xs text-forest/70">Enter your email address to receive launch updates for online doctor appointments.</p>
+                <form onsubmit="handleNotifySubmit(event)" class="flex gap-2">
+                    <input type="email" required placeholder="Enter your email address" class="flex-grow p-3 rounded-xl bg-cream border border-sage/30 text-sm focus:outline-none focus:border-sage">
+                    <button type="submit" class="px-5 py-3 rounded-xl bg-forest text-cream text-xs font-bold hover:bg-forest-dark transition-all">
+                        Notify Me
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 8. ABOUT PAGE VIEW (PROJECT & FOUNDERS) -->
+        <section id="view-about" class="spa-view hidden space-y-12">
+            <!-- Project Header -->
+            <div class="bg-white p-8 sm:p-12 rounded-3xl border border-sage/20 shadow-sm text-center max-w-3xl mx-auto space-y-4">
+                <span class="px-3.5 py-1.5 rounded-full bg-sage-light text-forest text-xs font-bold uppercase tracking-wider">College Engineering Project</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-forest">CEP Mental Health Assistant</h2>
+                <p class="text-forest/80 text-sm sm:text-base leading-relaxed">
+                    Developed as a Capstone Engineering Project (CEP) to provide an accessible, empathetic, and interactive digital mental wellness platform for university students.
+                </p>
+                <div class="pt-2 flex flex-wrap justify-center gap-3 text-xs font-semibold text-forest">
+                    <span class="px-3 py-1.5 rounded-xl bg-cream border border-sage/20">📍 Keystone School of Engineering</span>
+                    <span class="px-3.5 py-1.5 rounded-xl bg-cream border border-sage/20">🚀 Netlify & PWA Deployment Ready</span>
+                </div>
+            </div>
+
+            <!-- Academic Guidance & Founders Grid -->
+            <div class="space-y-6">
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold text-forest">Project Leadership & Founders</h3>
+                    <p class="text-xs text-forest/60 mt-1">Built under academic mentorship for college presentation</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    
+                    <!-- Guidance Card -->
+                    <div class="bg-gradient-to-b from-peach/30 to-white p-6 rounded-3xl border border-peach/50 shadow-sm text-center space-y-3">
+                        <div class="w-16 h-16 rounded-full bg-peach text-forest mx-auto flex items-center justify-center font-bold text-xl shadow-inner">
+                            PM
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-bold text-amber-800 uppercase tracking-widest bg-amber-100 px-2 py-0.5 rounded">Project Mentor</span>
+                            <h4 class="font-bold text-lg text-forest mt-1">Priti Mam</h4>
+                            <p class="text-xs text-forest/70">Faculty Guidance & Direction</p>
+                        </div>
+                    </div>
+
+                    <!-- Founder 1 -->
+                    <div class="bg-white p-6 rounded-3xl border border-sage/20 shadow-sm text-center space-y-3">
+                        <div class="w-16 h-16 rounded-full bg-sage-light text-forest mx-auto flex items-center justify-center font-bold text-xl shadow-inner">
+                            AA
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-bold text-forest uppercase tracking-widest bg-sage-light px-2 py-0.5 rounded">Co-Founder</span>
+                            <h4 class="font-bold text-lg text-forest mt-1">Ammar</h4>
+                            <p class="text-xs text-forest/70">Keystone School of Eng.</p>
+                        </div>
+                    </div>
+
+                    <!-- Founder 2 -->
+                    <div class="bg-white p-6 rounded-3xl border border-sage/20 shadow-sm text-center space-y-3">
+                        <div class="w-16 h-16 rounded-full bg-sage-light text-forest mx-auto flex items-center justify-center font-bold text-xl shadow-inner">
+                            AL
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-bold text-forest uppercase tracking-widest bg-sage-light px-2 py-0.5 rounded">Co-Founder</span>
+                            <h4 class="font-bold text-lg text-forest mt-1">Ali</h4>
+                            <p class="text-xs text-forest/70">Keystone School of Eng.</p>
+                        </div>
+                    </div>
+
+                    <!-- Founder 3 -->
+                    <div class="bg-white p-6 rounded-3xl border border-sage/20 shadow-sm text-center space-y-3">
+                        <div class="w-16 h-16 rounded-full bg-sage-light text-forest mx-auto flex items-center justify-center font-bold text-xl shadow-inner">
+                            SO
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-bold text-forest uppercase tracking-widest bg-sage-light px-2 py-0.5 rounded">Co-Founder</span>
+                            <h4 class="font-bold text-lg text-forest mt-1">Sohail</h4>
+                            <p class="text-xs text-forest/70">Keystone School of Eng.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Technical Architecture Card -->
+            <div class="bg-white p-8 rounded-3xl border border-sage/20 shadow-sm space-y-4">
+                <h3 class="text-xl font-bold text-forest">Technical Architecture & Netlify Deployment</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-forest/80">
+                    <div class="space-y-2">
+                        <h4 class="font-bold text-forest flex items-center gap-2"><i data-lucide="code" class="w-4 h-4 text-sage"></i> Single-File SPA Architecture</h4>
+                        <p class="text-xs leading-relaxed">Built using pure vanilla JavaScript, HTML5 semantic layout, dynamic DOM state management, and Tailwind CSS. Runs completely offline without complex Node build tools.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="font-bold text-forest flex items-center gap-2"><i data-lucide="globe" class="w-4 h-4 text-sage"></i> Netlify & Mobile PWA Ready</h4>
+                        <p class="text-xs leading-relaxed">Configured for direct drop-in hosting on Netlify. Includes web app manifest header meta tags, allowing users to select "Add to Home Screen" on Android and iOS devices.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-forest text-cream border-t border-forest-dark mt-16 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="heart-handshake" class="w-6 h-6 text-peach"></i>
+                        <span class="font-bold text-xl font-heading">CEP Mental Health Assistant</span>
+                    </div>
+                    <p class="text-xs text-cream/70 mt-1">Keystone School of Engineering Project • Guided by Priti Mam</p>
+                </div>
+                <div class="flex flex-wrap gap-4 text-xs font-medium text-cream/80">
+                    <button onclick="navigateTo('home')" class="hover:text-peach transition-colors">Home</button>
+                    <button onclick="navigateTo('chatbot')" class="hover:text-peach transition-colors">Mind Assistant</button>
+                    <button onclick="navigateTo('community')" class="hover:text-peach transition-colors">Community</button>
+                    <button onclick="navigateTo('about')" class="hover:text-peach transition-colors">About Project</button>
+                    <button onclick="openGuidelinesModal()" class="hover:text-peach transition-colors">Guidelines</button>
+                    <button onclick="openHelpModal()" class="hover:text-peach text-peach font-bold transition-colors">Help Now</button>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-forest-dark flex flex-col sm:flex-row items-center justify-between text-xs text-cream/60 gap-4">
+                <p>© 2026 CEP Mental Health Assistant (Founders: Ammar, Ali, Sohail). College Student Demo.</p>
+                <p>Designed with Sage & Peach Palette • Non-Clinical Educational Tool</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: CRISIS HELP NOW -->
+    <div id="modal-help" class="fixed inset-0 z-50 bg-forest/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl border border-rose-200 animate-in fade-in zoom-in duration-200">
+            <div class="flex items-center justify-between border-b border-rose-100 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-xl bg-rose-100 text-rose-600">
+                        <i data-lucide="phone-call" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-forest">Crisis Support & Helplines</h3>
+                        <p class="text-xs text-rose-600 font-semibold">Immediate Assistance Available 24/7</p>
+                    </div>
+                </div>
+                <button onclick="closeHelpModal()" class="p-2 rounded-xl text-forest/40 hover:text-forest hover:bg-cream"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <p class="text-xs text-forest/80 leading-relaxed">
+                If you or someone you know is in immediate danger, feeling overwhelmed, or experiencing thoughts of self-harm, please reach out to dedicated support services immediately:
+            </p>
+
+            <div class="space-y-3">
+                <a href="tel:14416" class="p-4 rounded-2xl bg-cream hover:bg-sage-light/50 border border-sage/20 flex items-center justify-between transition-all group">
+                    <div>
+                        <span class="text-xs font-bold text-forest">Tele-MANAS (Govt of India)</span>
+                        <p class="text-xs text-forest/60">24/7 Toll-free Mental Health Helpline</p>
+                    </div>
+                    <span class="font-mono font-bold text-forest group-hover:text-sage text-sm">14416</span>
+                </a>
+
+                <a href="tel:18005990019" class="p-4 rounded-2xl bg-cream hover:bg-sage-light/50 border border-sage/20 flex items-center justify-between transition-all group">
+                    <div>
+                        <span class="text-xs font-bold text-forest">KIRAN Helpline</span>
+                        <p class="text-xs text-forest/60">Mental Health Rehabilitation</p>
+                    </div>
+                    <span class="font-mono font-bold text-forest group-hover:text-sage text-sm">1800-599-0019</span>
+                </a>
+
+                <a href="tel:9999666555" class="p-4 rounded-2xl bg-cream hover:bg-sage-light/50 border border-sage/20 flex items-center justify-between transition-all group">
+                    <div>
+                        <span class="text-xs font-bold text-forest">Vandrevala Foundation</span>
+                        <p class="text-xs text-forest/60">24x7 Emotional Support</p>
+                    </div>
+                    <span class="font-mono font-bold text-forest group-hover:text-sage text-sm">+91 9999 666 555</span>
+                </a>
+
+                <a href="tel:112" class="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-between transition-all group">
+                    <div>
+                        <span class="text-xs font-bold text-rose-900">National Emergency Number</span>
+                        <p class="text-xs text-rose-700">Police / Ambulance</p>
+                    </div>
+                    <span class="font-mono font-bold text-rose-700 text-sm">112</span>
+                </a>
+            </div>
+
+            <button onclick="closeHelpModal()" class="w-full py-3 rounded-xl bg-forest text-cream font-bold text-xs hover:bg-forest-dark transition-all">
+                I Understand / Close
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: DOCTOR COMING SOON -->
+    <div id="modal-doctor" class="fixed inset-0 z-50 bg-forest/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl text-center">
+            <div class="w-16 h-16 rounded-full bg-peach/50 text-forest mx-auto flex items-center justify-center">
+                <i data-lucide="clock" class="w-8 h-8 text-forest"></i>
+            </div>
+            <div class="space-y-2">
+                <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold uppercase">Planned Upgrade</span>
+                <h3 class="text-xl font-bold text-forest">Feature Coming Soon!</h3>
+                <p id="modal-doctor-name" class="text-xs text-sage font-semibold">Dr. Consultation Preview</p>
+            </div>
+            <p class="text-xs text-forest/70 leading-relaxed">
+                Direct teleconsultation booking will be introduced in CEP Version 2.0. This feature currently serves as a user interface prototype for our college evaluation.
+            </p>
+            <div class="pt-2 flex gap-3">
+                <button onclick="closeDoctorModal()" class="flex-grow py-3 rounded-xl bg-forest text-cream font-bold text-xs hover:bg-forest-dark transition-all">
+                    Return to Platform
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: COMMUNITY GUIDELINES -->
+    <div id="modal-guidelines" class="fixed inset-0 z-50 bg-forest/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-sage/10 pb-3">
+                <h3 class="font-bold text-lg text-forest">Community Guidelines</h3>
+                <button onclick="closeGuidelinesModal()" class="p-1 text-forest/40 hover:text-forest"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <ul class="space-y-3 text-xs text-forest/80">
+                <li class="flex items-start gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-sage shrink-0 mt-0.5"></i>
+                    <span><strong>Be Kind & Respectful:</strong> Express empathy. Harassment or hate speech is not tolerated.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-sage shrink-0 mt-0.5"></i>
+                    <span><strong>Protect Privacy:</strong> Never post personal phone numbers, emails, addresses, or full names.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i data-lucide="check" class="w-4 h-4 text-sage shrink-0 mt-0.5"></i>
+                    <span><strong>Non-Medical Advice:</strong> Peers offer listening ears, not medical diagnoses.</span>
+                </li>
+            </ul>
+            <button onclick="closeGuidelinesModal()" class="w-full py-3 rounded-xl bg-forest text-cream font-bold text-xs hover:bg-forest-dark transition-all">
+                Got It
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* ==========================================================================
+           1. INITIALIZATION & GLOBAL STATE MANAGEMENT
+           ========================================================================== */
+        
+        // Dynamic Affirmations Array
+        const affirmations = [
+            "I am allowed to take things one step at a time. My value is not measured by my productivity.",
+            "Breathing in calm, breathing out tension. I am capable of handling today's challenges.",
+            "It is completely okay to ask for help when things feel heavy.",
+            "Small progress is still progress. I celebrate every small step I take today.",
+            "My feelings are valid, and I deserve kindness from myself and others."
+        ];
+
+        // Random Anonymous Aliases Generator Pool
+        const aliasAdjectives = ['Quiet', 'Calm', 'Gentle', 'Kind', 'Hopeful', 'Serene', 'Bright', 'Wise', 'Peaceful', 'Brave'];
+        const aliasNouns = ['Cloud', 'Panda', 'Breeze', 'Soul', 'River', 'Sky', 'Haven', 'Echo', 'Sprout', 'Star'];
+        let activeUserAlias = generateRandomAlias();
+
+        // Single-Page Application (SPA) Router
+        function navigateTo(viewId) {
+            // Hide all views
+            document.querySelectorAll('.spa-view').forEach(view => {
+                view.classList.add('hidden');
+            });
+
+            // Show target view
+            const targetView = document.getElementById(`view-${viewId}`);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update Active Nav Link Indicators
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-forest', 'text-cream');
+                btn.classList.add('text-forest', 'hover:bg-sage-light/50');
+            });
+            const activeNavBtn = document.getElementById(`nav-${viewId}`);
+            if (activeNavBtn) {
+                activeNavBtn.classList.remove('text-forest', 'hover:bg-sage-light/50');
+                activeNavBtn.classList.add('bg-forest', 'text-cream');
+            }
+        }
+
+        // Mobile Drawer Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const openIcon = document.getElementById('menu-icon-open');
+            const closeIcon = document.getElementById('menu-icon-close');
+            
+            menu.classList.toggle('hidden');
+            openIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        }
+
+        // Refresh Daily Affirmation
+        function refreshAffirmation() {
+            const currentText = document.getElementById('affirmation-text').innerText;
+            let nextAffirmation = affirmations[Math.floor(Math.random() * affirmations.length)];
+            while (`"${nextAffirmation}"` === currentText) {
+                nextAffirmation = affirmations[Math.floor(Math.random() * affirmations.length)];
+            }
+            document.getElementById('affirmation-text').innerText = `"${nextAffirmation}"`;
+            showToast('Affirmation refreshed');
+        }
+
+        // Generate Random Anonymous Alias
+        function generateRandomAlias() {
+            const adj = aliasAdjectives[Math.floor(Math.random() * aliasAdjectives.length)];
+            const noun = aliasNouns[Math.floor(Math.random() * aliasNouns.length)];
+            const num = Math.floor(Math.random() * 90) + 10;
+            return `${adj}${noun}${num}`;
+        }
+
+        function regenerateAlias() {
+            activeUserAlias = generateRandomAlias();
+            document.getElementById('active-user-alias').innerText = activeUserAlias;
+            showToast('New anonymous alias generated!');
+        }
+
+        // Toast Notification Function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast-slide p-4 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-3 border pointer-events-auto bg-white text-forest border-sage/30`;
+            
+            toast.innerHTML = `
+                <div class="w-6 h-6 rounded-full bg-sage-light flex items-center justify-center text-forest">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                </div>
+                <span>${sanitizeHTML(message)}</span>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Safe DOM Sanitizer
+        function sanitizeHTML(str) {
+            const temp = document.createElement('div');
+            temp.textContent = str;
+            return temp.innerHTML;
+        }
+
+        /* ==========================================================================
+           2. GUIDED CHATBOT LOGIC ENGINE (ROBUST RULE-BASED LOOPS)
+           ========================================================================== */
+
+        const chatbotTree = {
+            start: {
+                message: "Hi there! Welcome to CEP Mind Assistant. How are you feeling today? You don't need to explain everything at once.",
+                step: "Step 1 of 3",
+                options: [
+                    { label: "I feel stressed 😣", next: "stressed" },
+                    { label: "I feel anxious 😰", next: "anxious" },
+                    { label: "I feel sad or low 😔", next: "sadness" },
+                    { label: "Struggling with studies 📚", next: "studies" },
+                    { label: "Relationship issues 🤝", next: "relationships" },
+                    { label: "Trouble sleeping 🌙", next: "sleep" },
+                    { label: "I just want to talk 💬", next: "just_talk" }
+                ]
+            },
+            
+            // STRESS BRANCH
+            stressed: {
+                message: "I hear you. Academic and life pressure can get heavy. What is causing most of your stress right now?",
+                step: "Step 2 of 3",
+                options: [
+                    { label: "Exams or deadlines 📝", next: "stress_exams" },
+                    { label: "Family expectations 🏠", next: "stress_family" },
+                    { label: "Too many responsibilities ⚖️", next: "stress_responsibilities" },
+                    { label: "I am not sure ❓", next: "stress_unsure" }
+                ]
+            },
+            stress_exams: {
+                message: "Exam pressure is very real. What would help you most right in this moment?",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "I need to organize my work 📋", next: "act_organize" },
+                    { label: "I need to calm down right now 🧘", next: "act_breathing" },
+                    { label: "I feel completely overwhelmed 🌊", next: "act_overwhelmed" }
+                ]
+            },
+            stress_family: {
+                message: "Navigating family expectations can feel overwhelming. Remember: your worth isn't defined solely by perfection. Would you like a thought-reflection prompt or self-care break?",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "Give me a reflection prompt 💡", next: "act_reflection" },
+                    { label: "I want to explore self-care 🌿", next: "act_selfcare_redirect" }
+                ]
+            },
+            stress_responsibilities: {
+                message: "When responsibilities pile up, multitasking increases anxiety. Let's break things down into smaller 15-minute chunks.",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "Show me task breakdown guide ⏱️", next: "act_organize" },
+                    { label: "Try another topic 🔄", next: "start" }
+                ]
+            },
+            stress_unsure: {
+                message: "That is completely valid. Sometimes stress is just a cloud without a clear single cause. A short grounding exercise can help clear the mind.",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "Try 5-4-3-2-1 Grounding 🌿", next: "act_grounding" },
+                    { label: "Start Guided Breathing 🫁", next: "act_breathing" }
+                ]
+            },
+
+            // ANXIETY BRANCH
+            anxious: {
+                message: "Anxiety can make your heart race and thoughts feel fast. When do you notice this feeling most?",
+                step: "Step 2 of 3",
+                options: [
+                    { label: "Before an exam or event ⏳", next: "anx_event" },
+                    { label: "When around people / social 👥", next: "anx_social" },
+                    { label: "It happens unexpectedly ⚡", next: "anx_unexpected" },
+                    { label: "I keep overthinking 🌀", next: "anx_overthinking" }
+                ]
+            },
+            anx_event: {
+                message: "Pre-event nervous tension is your body trying to prepare. Let's use sensory grounding to bring you back to the present.",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "Start 5-4-3-2-1 Grounding 🖐️", next: "act_grounding" },
+                    { label: "Try Guided Breathing 🫁", next: "act_breathing" }
+                ]
+            },
+            anx_overthinking: {
+                message: "When thoughts loop endlessly, ask yourself: 'Is this thought a factual guarantee or just a possibility?' Writing it down breaks the loop.",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "Explore Journaling Tips 📓", next: "act_selfcare_redirect" },
+                    { label: "Try another topic 🔄", next: "start" }
+                ]
+            },
+
+            // SADNESS BRANCH
+            sadness: {
+                message: "I am sorry things feel heavy right now. What would feel most supportive to you today?",
+                step: "Step 2 of 3",
+                options: [
+                    { label: "I want to express feelings 📝", next: "sad_express" },
+                    { label: "I need a gentle small task 🌸", next: "sad_small_task" },
+                    { label: "I want to feel connected 🤝", next: "sad_community_redirect" }
+                ]
+            },
+            sad_express: {
+                message: "Expressing feelings safely is a strong step. Try writing a quick entry on our Anonymous Community Wall or keeping a private note.",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "Go to Community Wall 👥", next: "act_community_redirect" },
+                    { label: "Try another topic 🔄", next: "start" }
+                ]
+            },
+
+            // STUDIES BRANCH
+            studies: {
+                message: "Study struggles happen to every student at Keystone and beyond! What is your biggest challenge right now?",
+                step: "Step 2 of 3",
+                options: [
+                    { label: "Procrastination ⏳", next: "std_procrastination" },
+                    { label: "Difficulty concentrating 🧠", next: "std_focus" },
+                    { label: "Fear of failure 📉", next: "std_fear" }
+                ]
+            },
+            std_procrastination: {
+                message: "Procrastination is usually emotional regulation, not laziness. Try the 5-Minute Rule: Commit to working on just ONE task for 5 minutes.",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "I will try 5 minutes! 💪", next: "act_finish" },
+                    { label: "Explore Self-Care Library 📚", next: "act_selfcare_redirect" }
+                ]
+            },
+
+            // RELATIONSHIPS BRANCH
+            relationships: {
+                message: "Relationships can bring immense joy but also deep stress. What are you experiencing?",
+                step: "Step 2 of 3",
+                options: [
+                    { label: "Conflict with someone ⚡", next: "rel_conflict" },
+                    { label: "Feeling lonely / isolated 😔", next: "rel_lonely" },
+                    { label: "Setting boundaries 🛑", next: "rel_boundaries" }
+                ]
+            },
+            rel_lonely: {
+                message: "Feeling isolated is tough. Remember that many peers feel the exact same way. Sharing on the anonymous community can remind you that you aren't alone.",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "Visit Community Feed 🌐", next: "act_community_redirect" },
+                    { label: "Try another topic 🔄", next: "start" }
+                ]
+            },
+
+            // SLEEP BRANCH
+            sleep: {
+                message: "Sleep is crucial for mental resilience. What makes sleeping difficult tonight?",
+                step: "Step 2 of 3",
+                options: [
+                    { label: "Racing thoughts at night 🧠", next: "slp_thoughts" },
+                    { label: "Irregular sleep schedule ⏰", next: "slp_schedule" }
+                ]
+            },
+            slp_thoughts: {
+                message: "Try doing a 'Brain Dump': Write down every lingering task on paper so your brain knows it won't be forgotten overnight.",
+                step: "Step 3 of 3",
+                options: [
+                    { label: "Try Breathing Exercise 🫁", next: "act_breathing" },
+                    { label: "Try another topic 🔄", next: "start" }
+                ]
+            },
+
+            // JUST TALK BRANCH
+            just_talk: {
+                message: "I am here to listen! Select what reflects your day best:",
+                step: "Step 2 of 3",
+                options: [
+                    { label: "I had a difficult day 🌧️", next: "sadness" },
+                    { label: "I need encouragement 🌟", next: "act_encouragement" }
+                ]
+            },
+
+            // ACTION END NODES
+            act_organize: {
+                message: "<strong>Actionable Step Breakdown:</strong><br>1. Choose 1 micro-task.<br>2. Set a timer for 15 mins.<br>3. Remove phone distractions.<br><br>Would you like support with anything else?",
+                step: "Completed",
+                isEnd: true
+            },
+            act_breathing: {
+                message: "Let's pause and breathe together. Click below to launch our interactive 60-second breathing timer.",
+                step: "Action",
+                specialAction: 'breathing',
+                isEnd: true
+            },
+            act_grounding: {
+                message: "<strong>5-4-3-2-1 Sensory Grounding Technique:</strong><br>• Look around for <strong>5 things</strong> you can see.<br>• Touch <strong>4 things</strong> around you.<br>• Listen for <strong>3 sounds</strong>.<br>• Identify <strong>2 scents</strong>.<br>• Take <strong>1 deep breath</strong>.<br><br>How do you feel now?",
+                step: "Grounding",
+                isEnd: true
+            },
+            act_encouragement: {
+                message: "🌟 'You have survived 100% of your hardest days so far. You are stronger and more resilient than you give yourself credit for.' - CEP Team",
+                step: "Completed",
+                isEnd: true
+            },
+            act_selfcare_redirect: {
+                message: "Navigating to Self-Care Activity Library...",
+                redirect: 'selfcare'
+            },
+            act_community_redirect: {
+                message: "Navigating to Anonymous Community Wall...",
+                redirect: 'community'
+            },
+            act_finish: {
+                message: "Great choice! You've got this. Take it one step at a time.",
+                step: "Completed",
+                isEnd: true
+            }
+        };
+
+        let chatHistory = ['start'];
+
+        function renderChatCurrentState() {
+            const currentKey = chatHistory[chatHistory.length - 1];
+            const node = chatbotTree[currentKey];
+            
+            if (node.redirect) {
+                navigateTo(node.redirect);
+                return;
+            }
+
+            // Update step indicator
+            document.getElementById('chat-step-badge').innerText = node.step || "Interactive";
+            
+            // Toggle Back Button visibility
+            const backBtn = document.getElementById('chat-back-btn');
+            if (chatHistory.length > 1) {
+                backBtn.classList.remove('hidden');
+            } else {
+                backBtn.classList.add('hidden');
+            }
+
+            // Render Message Bubble in chat window
+            appendBotMessage(node.message);
+
+            // Render Option Chips
+            const container = document.getElementById('chat-options-container');
+            container.innerHTML = '';
+
+            if (node.specialAction === 'breathing') {
+                const btn = document.createElement('button');
+                btn.className = "px-4 py-2.5 rounded-xl bg-forest text-cream font-bold text-xs hover:bg-forest-dark transition-all flex items-center gap-2";
+                btn.innerHTML = `<i data-lucide="wind" class="w-4 h-4"></i> Open Breathing Tool`;
+                btn.onclick = () => navigateTo('breathing');
+                container.appendChild(btn);
+            }
+
+            if (node.options && node.options.length > 0) {
+                node.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "px-4 py-2.5 rounded-xl bg-cream border border-sage/30 text-forest font-semibold text-xs sm:text-sm hover:bg-sage-light hover:border-sage transition-all shadow-sm flex items-center gap-1.5";
+                    btn.innerText = opt.label;
+                    btn.onclick = () => selectChatOption(opt.label, opt.next);
+                    container.appendChild(btn);
+                });
+            } else if (node.isEnd) {
+                // Add standard end options
+                const restartBtn = document.createElement('button');
+                restartBtn.className = "px-4 py-2.5 rounded-xl bg-sage-light text-forest font-bold text-xs hover:bg-sage hover:text-white transition-all";
+                restartBtn.innerText = "Try Another Topic 🔄";
+                restartBtn.onclick = () => restartChat();
+
+                const selfcareBtn = document.createElement('button');
+                selfcareBtn.className = "px-4 py-2.5 rounded-xl bg-peach/50 text-forest font-bold text-xs hover:bg-peach transition-all";
+                selfcareBtn.innerText = "Explore Self-Care 🌿";
+                selfcareBtn.onclick = () => navigateTo('selfcare');
+
+                container.appendChild(restartBtn);
+                container.appendChild(selfcareBtn);
+            }
+
+            lucide.createIcons();
+        }
+
+        function appendUserMessage(text) {
+            const chatMessages = document.getElementById('chat-messages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = "flex justify-end";
+            msgDiv.innerHTML = `
+                <div class="max-w-[80%] bg-forest text-cream px-4 py-3 rounded-2xl rounded-tr-none text-xs sm:text-sm shadow-sm space-y-1">
+                    <p>${sanitizeHTML(text)}</p>
+                    <span class="text-[10px] text-cream/60 block text-right">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+            `;
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function appendBotMessage(htmlText) {
+            const chatMessages = document.getElementById('chat-messages');
+
+            // Add typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.id = "typing-indicator";
+            typingDiv.className = "flex items-center gap-2 text-forest/50 text-xs p-2";
+            typingDiv.innerHTML = `
+                <div class="w-7 h-7 rounded-xl bg-sage-light flex items-center justify-center text-forest">
+                    <i data-lucide="bot" class="w-4 h-4"></i>
+                </div>
+                <div class="flex gap-1">
+                    <span class="w-1.5 h-1.5 bg-sage rounded-full typing-dot"></span>
+                    <span class="w-1.5 h-1.5 bg-sage rounded-full typing-dot"></span>
+                    <span class="w-1.5 h-1.5 bg-sage rounded-full typing-dot"></span>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Remove typing indicator after delay
+            setTimeout(() => {
+                if (document.getElementById('typing-indicator')) {
+                    document.getElementById('typing-indicator').remove();
+                }
+
+                const msgDiv = document.createElement('div');
+                msgDiv.className = "flex items-start gap-3";
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-xl bg-sage-light text-forest flex items-center justify-center font-bold shrink-0 mt-1">
+                        <i data-lucide="bot" class="w-4 h-4"></i>
+                    </div>
+                    <div class="max-w-[85%] bg-white border border-sage/20 text-forest px-4 py-3 rounded-2xl rounded-tl-none text-xs sm:text-sm shadow-sm space-y-1 leading-relaxed">
+                        <div>${htmlText}</div>
+                        <span class="text-[10px] text-forest/40 block">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                `;
+                chatMessages.appendChild(msgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                lucide.createIcons();
+            }, 500);
+        }
+
+        function selectChatOption(label, nextKey) {
+            appendUserMessage(label);
+            chatHistory.push(nextKey);
+            setTimeout(() => {
+                renderChatCurrentState();
+            }, 400);
+        }
+
+        function popChatHistory() {
+            if (chatHistory.length > 1) {
+                chatHistory.pop();
+                document.getElementById('chat-messages').innerHTML = '';
+                renderChatCurrentState();
+            }
+        }
+
+        function restartChat() {
+            chatHistory = ['start'];
+            document.getElementById('chat-messages').innerHTML = '';
+            renderChatCurrentState();
+        }
+
+        /* ==========================================================================
+           3. ANONYMOUS COMMUNITY WALL LOGIC (LOCALSTORAGE PERSISTENCE)
+           ========================================================================== */
+
+        // Default initial demo posts
+        const defaultPosts = [
+            {
+                id: 'post-1',
+                alias: 'QuietCloud42',
+                time: '2 hours ago',
+                content: 'Exams start next week at Keystone. Feeling a bit anxious about practicals, but taking deep breaths and pacing my study schedule.',
+                likes: 12,
+                userLiked: false,
+                comments: [
+                    { alias: 'CalmPanda17', text: 'You got this! Focus on one subject at a time.' }
+                ]
+            },
+            {
+                id: 'post-2',
+                alias: 'HopefulHaven99',
+                time: '5 hours ago',
+                content: 'Reminder to everyone reading this: make sure you drink water and step outside for 5 minutes today! Your brain deserves a break. 🌿',
+                likes: 24,
+                userLiked: true,
+                comments: []
+            },
+            {
+                id: 'post-3',
+                alias: 'BraveRiver08',
+                time: '1 day ago',
+                content: 'Overcame procrastination today and completed my CEP assignment draft! Small wins matter.',
+                likes: 18,
+                userLiked: false,
+                comments: [
+                    { alias: 'GentleBreeze88', text: 'Huge milestone! Proud of you!' }
+                ]
+            }
+        ];
+
+        function getStoredPosts() {
+            const stored = localStorage.getItem('cep_community_posts');
+            if (!stored) {
+                localStorage.setItem('cep_community_posts', JSON.stringify(defaultPosts));
+                return defaultPosts;
+            }
+            return JSON.parse(stored);
+        }
+
+        function savePosts(posts) {
+            localStorage.setItem('cep_community_posts', JSON.stringify(posts));
+        }
+
+        let currentPostFilter = 'all';
+
+        function renderPosts() {
+            let posts = getStoredPosts();
+            const container = document.getElementById('posts-container');
+            container.innerHTML = '';
+
+            // Apply Filters
+            if (currentPostFilter === 'liked') {
+                posts.sort((a, b) => b.likes - a.likes);
+            } else if (currentPostFilter === 'recent') {
+                // Keep array default order
+            }
+
+            document.getElementById('total-post-count').innerText = `${posts.length} Posts`;
+
+            posts.forEach(post => {
+                const postCard = document.createElement('div');
+                postCard.className = "bg-white p-6 rounded-3xl border border-sage/20 shadow-sm space-y-4 transition-all hover:border-sage/40";
+                
+                postCard.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-sage/10 pb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full bg-sage-light text-forest flex items-center justify-center font-mono font-bold text-xs">
+                                ${post.alias.substring(0,2).toUpperCase()}
+                            </div>
+                            <div>
+                                <span class="font-mono font-bold text-xs text-forest">${sanitizeHTML(post.alias)}</span>
+                                <span class="text-[10px] text-forest/50 block">${post.time}</span>
+                            </div>
+                        </div>
+                        <button onclick="reportPost('${post.id}')" title="Report Post" class="text-forest/30 hover:text-rose-600 transition-colors">
+                            <i data-lucide="flag" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <p class="text-sm text-forest leading-relaxed">${sanitizeHTML(post.content)}</p>
+
+                    <div class="flex items-center justify-between pt-2">
+                        <div class="flex items-center gap-4">
+                            <button onclick="toggleLikePost('${post.id}')" class="flex items-center gap-1.5 text-xs font-bold ${post.userLiked ? 'text-rose-600' : 'text-forest/60'} hover:text-rose-600 transition-colors">
+                                <i data-lucide="heart" class="w-4 h-4 ${post.userLiked ? 'fill-rose-600' : ''}"></i>
+                                <span>${post.likes}</span>
+                            </button>
+                            <button onclick="toggleComments('${post.id}')" class="flex items-center gap-1.5 text-xs font-bold text-forest/60 hover:text-forest transition-colors">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                <span>${post.comments.length} Comments</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Expandable Comments Drawer -->
+                    <div id="comments-drawer-${post.id}" class="hidden space-y-3 pt-4 border-t border-sage/10 bg-cream/30 p-4 rounded-2xl">
+                        <div class="space-y-2 max-h-48 overflow-y-auto">
+                            ${post.comments.length === 0 ? '<p class="text-xs text-forest/50 italic">No comments yet. Be the first to encourage!</p>' : ''}
+                            ${post.comments.map(c => `
+                                <div class="bg-white p-2.5 rounded-xl border border-sage/10 text-xs">
+                                    <span class="font-mono font-bold text-forest text-[10px]">${sanitizeHTML(c.alias)}:</span>
+                                    <span class="text-forest/80 ml-1">${sanitizeHTML(c.text)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="flex gap-2 pt-2">
+                            <input type="text" id="comment-input-${post.id}" placeholder="Write an encouraging reply..." class="flex-grow p-2 rounded-xl bg-white border border-sage/30 text-xs text-forest focus:outline-none focus:border-sage">
+                            <button onclick="submitComment('${post.id}')" class="px-3 py-2 rounded-xl bg-forest text-cream font-bold text-xs hover:bg-forest-dark transition-all">
+                                Reply
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(postCard);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Real-time Character Counter
+        document.getElementById('post-input').addEventListener('input', function() {
+            const count = this.value.length;
+            document.getElementById('char-counter').innerText = `${count} / 280 characters`;
+        });
+
+        function submitNewPost() {
+            const input = document.getElementById('post-input');
+            const text = input.value.trim();
+
+            if (!text) {
+                showToast('Please write a message before posting!');
+                return;
+            }
+
+            const posts = getStoredPosts();
+            const newPost = {
+                id: 'post-' + Date.now(),
+                alias: activeUserAlias,
+                time: 'Just now',
+                content: text,
+                likes: 0,
+                userLiked: false,
+                comments: []
+            };
+
+            posts.unshift(newPost);
+            savePosts(posts);
+
+            input.value = '';
+            document.getElementById('char-counter').innerText = '0 / 280 characters';
+            showToast('Anonymous post published successfully!');
+            renderPosts();
+        }
+
+        function toggleLikePost(postId) {
+            const posts = getStoredPosts();
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                if (post.userLiked) {
+                    post.likes -= 1;
+                    post.userLiked = false;
+                } else {
+                    post.likes += 1;
+                    post.userLiked = true;
+                }
+                savePosts(posts);
+                renderPosts();
+            }
+        }
+
+        function toggleComments(postId) {
+            const drawer = document.getElementById(`comments-drawer-${postId}`);
+            drawer.classList.toggle('hidden');
+        }
+
+        function submitComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            const posts = getStoredPosts();
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.comments.push({
+                    alias: activeUserAlias,
+                    text: text
+                });
+                savePosts(posts);
+                showToast('Reply added anonymously!');
+                renderPosts();
+            }
+        }
+
+        function filterPosts(filterType) {
+            currentPostFilter = filterType;
+            document.querySelectorAll('.post-filter-btn').forEach(btn => {
+                btn.className = "post-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-forest border border-sage/30 hover:bg-sage-light";
+            });
+            document.getElementById(`filter-${filterType}`).className = "post-filter-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-forest text-cream";
+            renderPosts();
+        }
+
+        function reportPost(postId) {
+            showToast('Post reported for review. Thank you for keeping our space safe.');
+        }
+
+        /* ==========================================================================
+           4. DAILY MOOD TRACKER LOGIC
+           ========================================================================== */
+
+        let selectedMoodData = null;
+
+        function selectMood(moodName, emoji, colorClass) {
+            selectedMoodData = { name: moodName, emoji: emoji };
+            document.getElementById('mood-note-container').classList.remove('hidden');
+            document.getElementById('selected-mood-label').innerText = `Selected Mood: ${moodName} ${emoji}`;
+        }
+
+        function saveMoodEntry() {
+            if (!selectedMoodData) return;
+
+            const note = document.getElementById('mood-note-input').value.trim();
+            const history = JSON.parse(localStorage.getItem('cep_mood_history') || '[]');
+
+            const entry = {
+                id: Date.now(),
+                mood: selectedMoodData.name,
+                emoji: selectedMoodData.emoji,
+                note: note,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' })
+            };
+
+            history.unshift(entry);
+            localStorage.setItem('cep_mood_history', JSON.stringify(history));
+
+            document.getElementById('mood-note-input').value = '';
+            document.getElementById('mood-note-container').classList.add('hidden');
+            selectedMoodData = null;
+
+            showToast('Mood check-in saved!');
+            renderMoodHistory();
+        }
+
+        function renderMoodHistory() {
+            const history = JSON.parse(localStorage.getItem('cep_mood_history') || '[]');
+            const listContainer = document.getElementById('mood-logs-list');
+            const chartContainer = document.getElementById('mood-chart-container');
+
+            listContainer.innerHTML = '';
+            chartContainer.innerHTML = '';
+
+            if (history.length === 0) {
+                listContainer.innerHTML = '<p class="text-xs text-forest/50 italic text-center py-4">No mood entries recorded yet. Tap an emoji above to log how you feel!</p>';
+                chartContainer.innerHTML = '<div class="w-full text-center text-xs text-forest/40 my-auto">Mood chart will render as you check in</div>';
+                return;
+            }
+
+            // Render Chart Bars (Last 7 entries)
+            const recent = history.slice(0, 7).reverse();
+            const moodHeights = { 'Great': 100, 'Good': 80, 'Okay': 60, 'Low': 40, 'Overwhelmed': 20 };
+
+            recent.forEach(item => {
+                const barHeight = moodHeights[item.mood] || 50;
+                const bar = document.createElement('div');
+                bar.className = "flex flex-col items-center flex-grow gap-1";
+                bar.innerHTML = `
+                    <span class="text-xs">${item.emoji}</span>
+                    <div class="w-full max-w-[36px] bg-sage rounded-t-xl transition-all duration-500" style="height: ${barHeight}%"></div>
+                    <span class="text-[9px] font-bold text-forest/60">${item.date.split(',')[0]}</span>
+                `;
+                chartContainer.appendChild(bar);
+            });
+
+            // Render History List Items
+            history.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "p-3.5 rounded-2xl bg-cream/50 border border-sage/20 flex items-center justify-between text-xs";
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${item.emoji}</span>
+                        <div>
+                            <span class="font-bold text-forest">${item.mood}</span>
+                            <span class="text-forest/50 text-[10px] block">${item.date}</span>
+                            ${item.note ? `<p class="text-forest/80 italic mt-0.5">${sanitizeHTML(item.note)}</p>` : ''}
+                        </div>
+                    </div>
+                    <button onclick="deleteMoodEntry(${item.id})" class="text-forest/30 hover:text-rose-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                `;
+                listContainer.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        function deleteMoodEntry(id) {
+            let history = JSON.parse(localStorage.getItem('cep_mood_history') || '[]');
+            history = history.filter(item => item.id !== id);
+            localStorage.setItem('cep_mood_history', JSON.stringify(history));
+            renderMoodHistory();
+            showToast('Entry deleted');
+        }
+
+        function clearMoodHistory() {
+            localStorage.removeItem('cep_mood_history');
+            renderMoodHistory();
+            showToast('Mood history cleared');
+        }
+
+        /* ==========================================================================
+           5. BREATHING TIMER LOGIC
+           ========================================================================== */
+
+        let breathingActive = false;
+        let breathingSeconds = 60;
+        let breathingTimerId = null;
+        let phaseIntervalId = null;
+
+        function toggleBreathingTimer() {
+            const btn = document.getElementById('breath-start-btn');
+            const circle = document.getElementById('breathing-circle');
+
+            if (!breathingActive) {
+                breathingActive = true;
+                btn.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i> Pause Session`;
+                circle.classList.add('animate-breathe');
+                circle.classList.remove('animate-breathe-paused');
+                startBreathingRhythm();
+            } else {
+                breathingActive = false;
+                btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> Resume Session`;
+                circle.classList.add('animate-breathe-paused');
+                clearInterval(breathingTimerId);
+                clearInterval(phaseIntervalId);
+            }
+            lucide.createIcons();
+        }
+
+        function startBreathingRhythm() {
+            const phaseLabel = document.getElementById('breathing-phase');
+            const timerLabel = document.getElementById('breathing-timer');
+
+            const phases = ["Breathe In...", "Hold...", "Breathe Out...", "Rest..."];
+            let currentPhaseIdx = 0;
+
+            phaseLabel.innerText = phases[currentPhaseIdx];
+
+            phaseIntervalId = setInterval(() => {
+                if (!breathingActive) return;
+                currentPhaseIdx = (currentPhaseIdx + 1) % phases.length;
+                phaseLabel.innerText = phases[currentPhaseIdx];
+            }, 2000);
+
+            breathingTimerId = setInterval(() => {
+                if (!breathingActive) return;
+                breathingSeconds--;
+                timerLabel.innerText = `${breathingSeconds}s`;
+
+                if (breathingSeconds <= 0) {
+                    resetBreathingTimer();
+                    showToast('60-second breathing exercise completed!');
+                }
+            }, 1000);
+        }
+
+        function resetBreathingTimer() {
+            breathingActive = false;
+            clearInterval(breathingTimerId);
+            clearInterval(phaseIntervalId);
+            breathingSeconds = 60;
+
+            document.getElementById('breathing-timer').innerText = "60s";
+            document.getElementById('breathing-phase').innerText = "Get Ready";
+            document.getElementById('breath-start-btn').innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> Start Session`;
+            
+            const circle = document.getElementById('breathing-circle');
+            circle.classList.remove('animate-breathe', 'animate-breathe-paused');
+
+            lucide.createIcons();
+        }
+
+        /* ==========================================================================
+           6. SELF-CARE LIBRARY LOGIC
+           ========================================================================== */
+
+        const selfCareActivities = [
+            { id: 1, title: '5-Minute Desk Stretch', category: 'study', duration: '5 mins', desc: 'Roll shoulders back, stretch neck gently left and right, and reach upwards to relieve exam posture tension.', completed: false },
+            { id: 2, title: 'Gratitude Reflection', category: 'journaling', duration: '3 mins', desc: 'Write down 3 tiny things that brought a smile today, no matter how small.', completed: false },
+            { id: 3, title: 'Screen-Free Wind-down', category: 'relaxation', duration: '15 mins', desc: 'Put away phone and laptop 15 minutes before bed to allow melatonin production.', completed: false },
+            { id: 4, title: 'Hydration Reset', category: 'study', duration: '2 mins', desc: 'Drink a full glass of cold water mindfully, noticing the temperature and sensation.', completed: false },
+            { id: 5, title: 'Unsent Thought Letter', category: 'journaling', duration: '10 mins', desc: 'Write a raw, unedited note releasing frustration, then delete or discard it safely.', completed: false },
+            { id: 6, title: '4-7-8 Breathing Calm', category: 'relaxation', duration: '4 mins', desc: 'Inhale for 4s, hold for 7s, exhale completely through mouth for 8s.', completed: false }
+        ];
+
+        let currentSelfCareCat = 'all';
+
+        function renderSelfCareCards() {
+            const container = document.getElementById('selfcare-cards-container');
+            const searchVal = document.getElementById('selfcare-search').value.toLowerCase();
+            container.innerHTML = '';
+
+            const filtered = selfCareActivities.filter(act => {
+                const matchesCat = (currentSelfCareCat === 'all' || act.category === currentSelfCareCat);
+                const matchesSearch = act.title.toLowerCase().includes(searchVal) || act.desc.toLowerCase().includes(searchVal);
+                return matchesCat && matchesSearch;
+            });
+
+            filtered.forEach(act => {
+                const card = document.createElement('div');
+                card.className = `bg-white p-6 rounded-3xl border ${act.completed ? 'border-sage bg-sage-light/20' : 'border-sage/20'} shadow-sm flex flex-col justify-between space-y-4`;
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-cream text-forest border border-sage/20">${act.category}</span>
+                            <span class="text-xs text-forest/50 font-medium">${act.duration}</span>
+                        </div>
+                        <h4 class="font-bold text-forest text-base">${act.title}</h4>
+                        <p class="text-xs text-forest/70 leading-relaxed">${act.desc}</p>
+                    </div>
+
+                    <button onclick="toggleSelfCareComplete(${act.id})" class="w-full py-2.5 rounded-xl ${act.completed ? 'bg-sage text-white' : 'bg-cream text-forest border border-sage/30'} font-bold text-xs hover:bg-sage hover:text-white transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="${act.completed ? 'check-circle' : 'circle'}" class="w-4 h-4"></i>
+                        <span>${act.completed ? 'Completed' : 'Mark as Completed'}</span>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+
+            // Update Counter
+            const count = selfCareActivities.filter(a => a.completed).length;
+            document.getElementById('selfcare-completed-counter').innerText = `${count} Activities Completed Today`;
+
+            lucide.createIcons();
+        }
+
+        function filterSelfCare(category) {
+            currentSelfCareCat = category;
+            document.querySelectorAll('.selfcare-cat-btn').forEach(btn => {
+                btn.className = "selfcare-cat-btn px-3 py-2 rounded-xl text-xs font-bold bg-cream text-forest border border-sage/30 hover:bg-sage-light whitespace-nowrap";
+            });
+            renderSelfCareCards();
+        }
+
+        function toggleSelfCareComplete(id) {
+            const act = selfCareActivities.find(a => a.id === id);
+            if (act) {
+                act.completed = !act.completed;
+                renderSelfCareCards();
+                if (act.completed) showToast(`Completed: ${act.title}`);
+            }
+        }
+
+        /* ==========================================================================
+           7. MODALS & FORMS LOGIC
+           ========================================================================== */
+
+        function openHelpModal() {
+            document.getElementById('modal-help').classList.remove('hidden');
+        }
+        function closeHelpModal() {
+            document.getElementById('modal-help').classList.add('hidden');
+        }
+
+        function openDoctorModal(docName) {
+            document.getElementById('modal-doctor-name').innerText = `Consultation Preview with ${docName}`;
+            document.getElementById('modal-doctor').classList.remove('hidden');
+        }
+        function closeDoctorModal() {
+            document.getElementById('modal-doctor').classList.add('hidden');
+        }
+
+        function openGuidelinesModal() {
+            document.getElementById('modal-guidelines').classList.remove('hidden');
+        }
+        function closeGuidelinesModal() {
+            document.getElementById('modal-guidelines').classList.add('hidden');
+        }
+
+        function handleNotifySubmit(e) {
+            e.preventDefault();
+            showToast('Thank you! We will notify you when Telehealth launches.');
+            e.target.reset();
+        }
+
+        /* ==========================================================================
+           8. PAGE LOAD BOOTSTRAP
+           ========================================================================== */
+        window.onload = function() {
+            // Set active alias on load
+            document.getElementById('active-user-alias').innerText = activeUserAlias;
+
+            // Initialize views & dynamic data
+            renderPosts();
+            renderMoodHistory();
+            renderSelfCareCards();
+            renderChatCurrentState();
+
+            // Initialize Lucide Icons
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
